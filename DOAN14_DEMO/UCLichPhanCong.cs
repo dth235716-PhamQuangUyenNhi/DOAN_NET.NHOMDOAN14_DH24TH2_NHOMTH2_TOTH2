@@ -31,7 +31,7 @@ namespace DOAN14_DEMO
             dataGridViewpc.CellClick += dataGridViewpc_CellClick;
         }
 
-        // ======================= KẾT NỐI SQL SERVER =======================
+        // ------------------------ KẾT NỐI SQL SERVER --------------------------
         private SqlConnection GetConnection()
         {
             return new SqlConnection(
@@ -44,6 +44,7 @@ namespace DOAN14_DEMO
         {
             LoadMonHoc();
             LoadData();
+            LoadNamHocToMenu();
             SetEditingState(false);
 
         }
@@ -71,9 +72,19 @@ namespace DOAN14_DEMO
                 conn.Open();
 
                 string sql =
-                    @"SELECT MaLich, STT, MaGV, MaMon, MaLop, NamHoc, Ghichu
-                      FROM LICHPHANCONG
-                      ORDER BY MaLich, STT";
+                @"SELECT 
+                    LP.NamHoc,
+                    LP.MaGV,
+                    GV.HovaTendem + ' ' + GV.Ten AS HoTenGV,
+                    L.TenLop,
+                    TBM.TenTo AS BoMon,
+                    L.Siso AS Siso,        
+                    LP.Ghichu
+                FROM LICHPHANCONG LP
+                INNER JOIN GIAOVIEN GV ON LP.MaGV = GV.MaGV
+                INNER JOIN LOP L ON LP.MaLop = L.MaLop
+                INNER JOIN TOBOMON TBM ON GV.MaGV = TBM.MaToTruong
+                ORDER BY LP.NamHoc, L.TenLop";
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataTable dt = new DataTable();
@@ -83,7 +94,7 @@ namespace DOAN14_DEMO
             }
         }
 
-        // ======================= CLEAR INPUT =======================
+        // ---------------------------- CLEAR INPUT -----------------------------
         private void ClearInput()
         {
             txtNamHoc.Clear();
@@ -93,7 +104,7 @@ namespace DOAN14_DEMO
             cbMon.SelectedIndex = -1;
         }
 
-        // ======================= ENABLE / DISABLE =======================
+        // ------------------------- ENABLE / DISABLE ------------------------
         private void SetEditingState(bool editing)
         {
             txtNamHoc.Enabled = editing;
@@ -110,7 +121,74 @@ namespace DOAN14_DEMO
             btnXoa.Enabled = !editing;
         }
 
-        // ======================= NÚT THÊM =======================
+
+        // ----------------------- LOAD NĂM HỌC -----------------------
+        private void LoadNamHocToMenu()
+        {
+            menuNam.DropDownItems.Clear();
+
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string sql = "SELECT DISTINCT NamHoc FROM LICHPHANCONG ORDER BY NamHoc DESC";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int nam = reader.GetInt32(0);
+
+                    ToolStripMenuItem item = new ToolStripMenuItem(nam.ToString());
+                    item.Tag = nam;
+                    item.Click += NamHocMenu_Click;
+
+                    menuNam.DropDownItems.Add(item);
+                }
+            }
+        }
+
+        private void NamHocMenu_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            int nam = (int)item.Tag;
+
+            LoadDataByYear(nam);
+        }
+
+        private void LoadDataByYear(int namhoc)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+
+                string sql =
+                @"SELECT 
+                    LP.NamHoc,
+                    LP.MaGV,
+                    GV.HovaTendem + ' ' + GV.Ten AS HoTenGV,
+                    L.TenLop,
+                    TBM.TenTo AS BoMon,
+                    L.Siso AS Siso,        
+                    LP.Ghichu
+                FROM LICHPHANCONG LP
+                INNER JOIN GIAOVIEN GV ON LP.MaGV = GV.MaGV
+                INNER JOIN LOP L ON LP.MaLop = L.MaLop
+                INNER JOIN TOBOMON TBM ON GV.MaGV = TBM.MaToTruong
+                WHERE LP.NamHoc = @namhoc
+                ORDER BY LP.NamHoc, L.TenLop";
+
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Parameters.AddWithValue("@namhoc", namhoc);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dataGridViewpc.DataSource = dt;
+            }
+        }
+
+        // --------------------------- NÚT THÊM --------------------------
         private void btnThem_Click(object sender, EventArgs e)
         {
             isAddingNew = true;
@@ -118,7 +196,7 @@ namespace DOAN14_DEMO
             SetEditingState(true);
         }
 
-        // ======================= NÚT SỬA =======================
+        // ---------------------------- NÚT SỬA ----------------------------
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (txtMaGV.Text.Trim() == "")
@@ -131,14 +209,14 @@ namespace DOAN14_DEMO
             SetEditingState(true);
         }
 
-        // ======================= NÚT HỦY =======================
+        // -------------------------- NÚT HỦY ----------------------------
         private void btnHuy_Click(object sender, EventArgs e)
         {
             ClearInput();
             SetEditingState(false);
         }
 
-        // ======================= VALIDATE =======================
+        // ----------------------------- VALIDATE ---------------------------
         private bool ValidateInput()
         {
             if (txtMaGV.Text.Trim() == "")
@@ -165,6 +243,8 @@ namespace DOAN14_DEMO
             return true;
         }
 
+
+        // --------------------------- NÚT LƯU ------------------------
         private void btnLuu_Click(object sender, EventArgs e)
         {
             if (!ValidateInput()) return;
@@ -217,7 +297,7 @@ namespace DOAN14_DEMO
             SetEditingState(false);
         }
 
-        // ======================= NUT XOA =======================
+        // ------------------------------ NUT XOA =-------------------------
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
@@ -249,7 +329,7 @@ namespace DOAN14_DEMO
             ClearInput();
         }
 
-        // ======================= CLICK VÀO DÒNG DATA GRID VIEW =======================
+        // ------------------------ CLICK VÀO DÒNG DATA GRID VIEW ----------------------
         private void dataGridViewpc_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -264,7 +344,7 @@ namespace DOAN14_DEMO
             cbMon.SelectedValue = row.Cells["MaMon"].Value.ToString();
         }
 
-        // ======================= NÚT THOÁT =======================
+        // -------------------- NÚT THOÁT -------------------------
         private void btnThoat_Click(object sender, EventArgs e)
         {
             ((form2)this.ParentForm).GoHome();

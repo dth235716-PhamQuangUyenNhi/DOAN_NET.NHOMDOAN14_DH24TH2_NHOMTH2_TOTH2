@@ -25,7 +25,7 @@ namespace DOAN14_DEMO
             dataGridViewGV.CellClick += dataGridViewGV_CellClick;
         }
 
-        // ======================= KẾT NỐI SQL SERVER =======================
+        // ------------------------ KẾT NỐI SQL SERVER -----------------------
         private SqlConnection GetConnection()
         {
             return new SqlConnection(
@@ -34,7 +34,7 @@ namespace DOAN14_DEMO
                   Trusted_Connection=True;");
         }
 
-        // ======================= LOAD DỮ LIỆU LÊN LƯỚI =======================
+        // ------------------------ LOAD DỮ LIỆU LÊN LƯỚI ------------------------
         private void UCQuanlyGiaoVien_Load(object sender, EventArgs e)
         {
             LoadData();
@@ -57,7 +57,7 @@ namespace DOAN14_DEMO
             }
         }
 
-        // ======================= CLEAR INPUT =======================
+        // ---------------------------- CLEAR INPUT -----------------------
         private void ClearInput()
         {
             txtMaGV.Clear();
@@ -70,7 +70,7 @@ namespace DOAN14_DEMO
             rdNu.Checked = false;
         }
 
-        // ======================= BẬT / TẮT CHẾ ĐỘ NHẬP =======================
+        // -------------------------- BẬT / TẮT CHẾ ĐỘ NHẬP -----------------------
         private void SetEditingState(bool editing)
         {
             txtMaGV.Enabled = editing;
@@ -90,7 +90,7 @@ namespace DOAN14_DEMO
             btnXoa.Enabled = !editing;
         }
 
-        // ======================= NÚT THÊM =======================
+        // ------------------------------ NÚT THÊM ---------------------------
         private void btnThem_Click(object sender, EventArgs e)
         {
             isAddingNew = true;
@@ -98,7 +98,7 @@ namespace DOAN14_DEMO
             SetEditingState(true);
         }
 
-        // ======================= NÚT SỬA =======================
+        // ----------------------------- NÚT SỬA ---------------------------
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (txtMaGV.Text.Trim() == "")
@@ -111,14 +111,14 @@ namespace DOAN14_DEMO
             SetEditingState(true);
         }
 
-        // ======================= NÚT HỦY =======================
+        // ---------------------------- NÚT HỦY ------------------------------
         private void btnHuy_Click(object sender, EventArgs e)
         {
             ClearInput();
             SetEditingState(false);
         }
 
-        // ======================= NÚT LƯU =======================
+        // ----------------------------- NÚT LƯU --------------------------------
         private void btnLuu_Click(object sender, EventArgs e)
         {
             if (!ValidateInput()) return;
@@ -168,7 +168,7 @@ namespace DOAN14_DEMO
             SetEditingState(false);
         }
 
-        // ======================= KIỂM TRA DỮ LIỆU =======================
+        // ---------------------------- KIỂM TRA DỮ LIỆU ---------------------------
         private bool ValidateInput()
         {
             if (txtMaGV.Text.Trim() == "")
@@ -186,7 +186,7 @@ namespace DOAN14_DEMO
             return true;
         }
 
-        // ======================= NÚT XÓA =======================
+        // -------------------------- NÚT XÓA ----------------------------
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (txtMaGV.Text.Trim() == "")
@@ -211,7 +211,7 @@ namespace DOAN14_DEMO
             ClearInput();
         }
 
-        // ======================= CLICK VÀO DGR =======================
+        // --------------------------- CLICK VÀO DGR ---------------------------
         private void dataGridViewGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -230,7 +230,7 @@ namespace DOAN14_DEMO
             rdNu.Checked = (gt == "Nữ");
         }
 
-        // ======================= NÚT THOÁT (XÓA UC) =======================
+        // ------------------------- NÚT THOÁT (XÓA UC)-----------------------
         private void btnThoat_Click(object sender, EventArgs e)
         {
             ((form2)this.ParentForm).GoHome();

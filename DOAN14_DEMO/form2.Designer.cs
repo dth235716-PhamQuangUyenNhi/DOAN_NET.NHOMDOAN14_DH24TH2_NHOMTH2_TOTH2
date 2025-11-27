@@ -146,7 +146,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "form2";
-            this.Text = "Form2";
+            this.Text = "Hệ thống quản lý giáo viên trong phổ thông";
             this.Load += new System.EventHandler(this.form2_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

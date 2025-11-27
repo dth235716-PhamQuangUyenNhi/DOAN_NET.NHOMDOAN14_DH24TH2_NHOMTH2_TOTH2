@@ -145,7 +145,7 @@
             this.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "form_dangnhap";
-            this.Text = "Form1";
+            this.Text = "Hệ thống đăng nhập";
             this.Load += new System.EventHandler(this.form_dangnhap_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
