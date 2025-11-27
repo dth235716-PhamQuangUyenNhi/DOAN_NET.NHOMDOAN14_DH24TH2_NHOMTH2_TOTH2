@@ -1,4 +1,4 @@
-﻿namespace DOAN14_QLGVPT
+﻿namespace DOAN14_DEMO
 {
     partial class UCTimkiem
     {

@@ -20,7 +20,7 @@ namespace DOAN14_DEMO
 
         private void form2_Load(object sender, EventArgs e)
         {
-
+            ShowUCTrangChu();
         }
 
         public static class NavigationService

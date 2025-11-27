@@ -3,11 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
-namespace DOAN14_QLGVPT
+namespace DOAN14_DEMO
 {
     public partial class UCToBoMon : UserControl
     {
-        private string connectionString = @"Server=LAPTOP-1I777SIS\SQLEXPRESS;Database=QLGVPT;Trusted_Connection=True;";
+        private string connectionString = @"Server=LAPTOP-1I777SIS\SQLEXPRESS;Database=QLGVTP;Trusted_Connection=True;";
         private bool isAddingNew = false;
 
         public UCToBoMon()
@@ -20,15 +20,13 @@ namespace DOAN14_QLGVPT
             btnSua.Click += BtnSua_Click;
             btnHuy.Click += BtnHuy_Click;
             btnLuu.Click += BtnLuu_Click;
-
+            btnThoat.Click += btnThoat_Click;
             dataGridView1.CellClick += DataGridView1_CellClick;
 
             LockControls(true);
         }
 
-        // ============================================================
-        // 1. KHÓA / MỞ CONTROL
-        // ============================================================
+        // ----------------------------- KHÓA / MỞ CONTROL --------------------------------
         private void LockControls(bool isLocked)
         {
             txtMaTo.Enabled = !isLocked;
@@ -46,9 +44,7 @@ namespace DOAN14_QLGVPT
             btnXoa.Enabled = isLocked;
         }
 
-        // ============================================================
-        // 2. CLEAR THÔNG TIN
-        // ============================================================
+        //---------------------------------- CLEAR THÔNG TIN -----------------------------------
         private void ClearFields()
         {
             txtMaTo.Text = "";
@@ -59,9 +55,8 @@ namespace DOAN14_QLGVPT
             txtEmail.Text = "";
         }
 
-        // ============================================================
-        // 3. LOAD DỮ LIỆU
-        // ============================================================
+
+        // ----------------------------------- LOAD DỮ LIỆU ----------------------------
         private void UCToBoMon_Load(object sender, EventArgs e)
         {
             LoadData();
@@ -73,7 +68,17 @@ namespace DOAN14_QLGVPT
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT * FROM TOBOMON";
+                    string query = @"
+                    SELECT 
+                        T.MaTo,
+                        T.TenTo,
+                        T.MaToTruong,
+                        (G.HovaTendem + ' ' + G.Ten) AS TenToTruong,
+                        G.SDT,
+                        G.Email
+                    FROM TOBOMON T
+                    LEFT JOIN GIAOVIEN G ON T.MaToTruong = G.MaGV";
+
                     SqlDataAdapter da = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
@@ -86,25 +91,24 @@ namespace DOAN14_QLGVPT
             }
         }
 
-        // ============================================================
-        // 4. CLICK DATAGRIDVIEW → FILL TEXTBOX
-        // ============================================================
+
+        // ------------------------------- CLICK DATAGRIDVIEW → FILL TEXTBOX -----------------------------
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                txtMaTo.Text = dataGridView1.Rows[e.RowIndex].Cells["MaTo"].Value.ToString();
-                txtTenTo.Text = dataGridView1.Rows[e.RowIndex].Cells["TenTo"].Value.ToString();
-                txtSDT.Text = dataGridView1.Rows[e.RowIndex].Cells["SDT"].Value.ToString();
-                txtMaToTruong.Text = dataGridView1.Rows[e.RowIndex].Cells["MaToTruong"].Value.ToString();
-                txtHoTenTruong.Text = dataGridView1.Rows[e.RowIndex].Cells["TenToTruong"].Value.ToString();
-                txtEmail.Text = dataGridView1.Rows[e.RowIndex].Cells["Email"].Value.ToString();
+                var row = dataGridView1.Rows[e.RowIndex];
+
+                txtMaTo.Text = row.Cells["MaTo"].Value.ToString();
+                txtTenTo.Text = row.Cells["TenTo"].Value.ToString();
+                txtMaToTruong.Text = row.Cells["MaToTruong"].Value.ToString();
+                txtHoTenTruong.Text = row.Cells["TenToTruong"].Value.ToString();
+                txtSDT.Text = row.Cells["SDT"].Value.ToString();
+                txtEmail.Text = row.Cells["Email"].Value.ToString();
             }
         }
 
-        // ============================================================
-        // 5. NÚT THÊM
-        // ============================================================
+        //-------------------------------- NÚT THÊM --------------------------------
         private void BtnThem_Click(object sender, EventArgs e)
         {
             isAddingNew = true;
@@ -113,9 +117,7 @@ namespace DOAN14_QLGVPT
             txtMaTo.Focus();
         }
 
-        // ============================================================
-        // 6. NÚT SỬA
-        // ============================================================
+        //-------------------------------- NÚT SỬA --------------------------------
         private void BtnSua_Click(object sender, EventArgs e)
         {
             if (txtMaTo.Text == "")
@@ -129,9 +131,7 @@ namespace DOAN14_QLGVPT
             txtMaTo.Enabled = false;  // Không cho sửa khóa chính
         }
 
-        // ============================================================
-        // 7. NÚT XÓA
-        // ============================================================
+        // ------------------------------- NÚT XÓA -----------------------------
         private void BtnXoa_Click(object sender, EventArgs e)
         {
             if (txtMaTo.Text == "")
@@ -163,9 +163,7 @@ namespace DOAN14_QLGVPT
             }
         }
 
-        // ============================================================
-        // 8. NÚT LƯU (THÊM HOẶC SỬA)
-        // ============================================================
+        // -------------------------------- NÚT LƯU -----------------------------
         private void BtnLuu_Click(object sender, EventArgs e)
         {
             try
@@ -178,26 +176,20 @@ namespace DOAN14_QLGVPT
                     if (isAddingNew)
                     {
                         string query =
-                            "INSERT INTO TOBOMON (MaTo, TenTo, SDT, MaToTruong, TenToTruong, Email) " +
-                            "VALUES (@MaTo, @TenTo, @SDT, @MaToTruong, @TenToTruong, @Email)";
-
+                            "INSERT INTO TOBOMON (MaTo, TenTo, MaToTruong) " +
+                            "VALUES (@MaTo, @TenTo, @MaToTruong)";
                         cmd = new SqlCommand(query, conn);
                     }
                     else
                     {
                         string query =
-                            "UPDATE TOBOMON SET TenTo=@TenTo, SDT=@SDT, MaToTruong=@MaToTruong, " +
-                            "TenToTruong=@TenToTruong, Email=@Email WHERE MaTo=@MaTo";
-
+                            "UPDATE TOBOMON SET TenTo=@TenTo, MaToTruong=@MaToTruong WHERE MaTo=@MaTo";
                         cmd = new SqlCommand(query, conn);
                     }
 
                     cmd.Parameters.AddWithValue("@MaTo", txtMaTo.Text);
                     cmd.Parameters.AddWithValue("@TenTo", txtTenTo.Text);
-                    cmd.Parameters.AddWithValue("@SDT", txtSDT.Text);
                     cmd.Parameters.AddWithValue("@MaToTruong", txtMaToTruong.Text);
-                    cmd.Parameters.AddWithValue("@TenToTruong", txtHoTenTruong.Text);
-                    cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -211,13 +203,17 @@ namespace DOAN14_QLGVPT
             }
         }
 
-        // ============================================================
-        // 9. NÚT HỦY
-        // ============================================================
+        // -------------------------------- NÚT HỦY -----------------------------
         private void BtnHuy_Click(object sender, EventArgs e)
         {
             LockControls(true);
             ClearFields();
+        }
+
+        // -------------------------------- NÚT THOÁT -----------------------------
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            ((form2)this.ParentForm).GoHome();
         }
     }
 }

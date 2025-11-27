@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnThoat = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.chkHienMatKhau = new System.Windows.Forms.CheckBox();
@@ -51,7 +51,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Teal;
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnThoat);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -60,14 +60,14 @@
             this.panel1.Size = new System.Drawing.Size(939, 71);
             this.panel1.TabIndex = 5;
             // 
-            // button1
+            // btnThoat
             // 
-            this.button1.Location = new System.Drawing.Point(806, 14);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 47);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "<<<";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnThoat.Location = new System.Drawing.Point(806, 14);
+            this.btnThoat.Name = "btnThoat";
+            this.btnThoat.Size = new System.Drawing.Size(121, 47);
+            this.btnThoat.TabIndex = 1;
+            this.btnThoat.Text = "<<<";
+            this.btnThoat.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -128,6 +128,7 @@
             this.btnHuy.TabIndex = 10;
             this.btnHuy.Text = "HỦY";
             this.btnHuy.UseVisualStyleBackColor = true;
+            this.btnHuy.Click += new System.EventHandler(this.btnHuy_Click);
             // 
             // txtMatKhauMoi
             // 
@@ -166,6 +167,7 @@
             this.btnSua.TabIndex = 4;
             this.btnSua.Text = "SỬA";
             this.btnSua.UseVisualStyleBackColor = true;
+            this.btnSua.Click += new System.EventHandler(this.btnSua_Click);
             // 
             // label5
             // 
@@ -225,7 +227,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnThoat;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.CheckBox chkHienMatKhau;

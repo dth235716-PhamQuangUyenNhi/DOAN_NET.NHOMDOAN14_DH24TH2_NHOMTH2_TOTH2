@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
-namespace DOAN14_QLGVPT
+namespace DOAN14_DEMO
 {
     public partial class UCTimkiem : UserControl
     {

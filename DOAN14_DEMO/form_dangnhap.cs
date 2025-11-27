@@ -8,6 +8,7 @@ namespace DOAN14_DEMO
     public partial class form_dangnhap : Form
     {
         public static string CurrentUser = "";
+        public static string CurrentPassword;
 
         public form_dangnhap()
         {
